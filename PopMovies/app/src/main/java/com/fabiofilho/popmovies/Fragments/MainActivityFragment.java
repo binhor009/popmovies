@@ -9,8 +9,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.fabiofilho.popmovies.ImageAdapter;
+import com.fabiofilho.popmovies.Objects.Movies.Movie;
+import com.fabiofilho.popmovies.Objects.Movies.MoviesAdapter;
 import com.fabiofilho.popmovies.R;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -28,15 +31,15 @@ public class MainActivityFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        objectsCreation();
+        creationOfObjects();
 
         return mRootView;
     }
 
-    private void objectsCreation() {
+    private void creationOfObjects() {
 
         GridView gridview = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
-        gridview.setAdapter(new ImageAdapter(mRootView.getContext()));
+        gridview.setAdapter(new MoviesAdapter(mRootView.getContext(), new ArrayList<Movie>()));
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
