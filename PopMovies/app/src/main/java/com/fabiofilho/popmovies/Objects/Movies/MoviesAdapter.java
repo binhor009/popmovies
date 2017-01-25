@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.fabiofilho.popmovies.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public class MoviesAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return 10/*mMovieList.size()*/;
+        return mMovieList.size();
     }
 
     public Object getItem(int position) {
@@ -50,7 +51,8 @@ public class MoviesAdapter extends BaseAdapter {
         } else
             imageView = (ImageView) view;
 
-        imageView.setImageResource(R.drawable.sample_0);
+        Picasso.with(mContext).load(mMovieList.get(position).getImageUrl()).into(imageView);
+
         return imageView;
     }
 
