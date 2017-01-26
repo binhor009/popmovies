@@ -45,7 +45,7 @@ public class MainActivityFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_movie_sort) {
-            //TODO: Change the way ti store the current movie order.
+            //TODO: Change the way this stores the current movie order.
             Movie.sChosenPopularMovieOrder = !Movie.sChosenPopularMovieOrder;
             updateMoviesAdapter();
             return true;
