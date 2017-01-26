@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * Created by dialam on 21/01/17.
  */
 
-public class MoviesAdapter extends BaseAdapter {
+public class MovieAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Movie> mMovieList;
     private LayoutInflater mLayoutInflater;
 
-    public MoviesAdapter(Context context, ArrayList<Movie> movieList) {
+    public MovieAdapter(Context context, ArrayList<Movie> movieList) {
         mContext = context;
         mMovieList = movieList;
         mLayoutInflater = LayoutInflater.from(context);
@@ -51,7 +51,7 @@ public class MoviesAdapter extends BaseAdapter {
         } else
             imageView = (ImageView) view;
 
-        Picasso.with(mContext).load(mMovieList.get(position).getImageUrl()).into(imageView);
+        Picasso.with(mContext).load(mMovieList.get(position).getPosterPath()).into(imageView);
 
         return imageView;
     }

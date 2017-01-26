@@ -17,14 +17,16 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private static final String MOVIES_URL =  "https://api.themoviedb.org/3/movie/";
     private static final String PARAMETER_API_KEY = "api_key";
 
 
-    public static URL buildURL(String orderBy) throws MalformedURLException{
+    public static URL buildURL(String url, boolean appendsApiKey) throws MalformedURLException{
 
-        Uri uri = Uri.parse(MOVIES_URL + orderBy).buildUpon()
-                .appendQueryParameter(PARAMETER_API_KEY, BuildConfig.THE_MOVIE_DB_API_KEY).build();
+        Uri.Builder uriBuilder = Uri.parse(url).buildUpon();
+
+        uriBuilder = appendsApiKey ? uriBuilder.appendQueryParameter(PARAMETER_API_KEY, BuildConfig.THE_MOVIE_DB_API_KEY) : uriBuilder;
+
+        Uri uri = uriBuilder.build();
 
         return new URL(uri.toString());
     }

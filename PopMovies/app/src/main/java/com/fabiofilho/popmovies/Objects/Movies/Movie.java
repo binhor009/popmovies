@@ -6,22 +6,29 @@ package com.fabiofilho.popmovies.Objects.Movies;
 
 public class Movie {
 
+    public static final String MOVIES_URL =  "https://api.themoviedb.org/3/movie/";
+    public static final String MOVIES_IMAGE_URL =  "http://image.tmdb.org/t/p/";
+
+    public static final String MOVIES_ORDER_POPULAR = "popular";
+    public static final String MOVIES_ORDER_TOP_RATED = "top_rated";
+    public static boolean sChosenPopularMovieOrder = true;
+
+    private static final String IMAGE_SIZE = "w185";
+
     private int id;
     private String title;
     private String releaseDate;
     private double votesAverage;
-    private String poster;
-    private String synopsis;
-    private String imageUrl;
+    private String overview;
+    private String posterPath;
 
-    public Movie(int id, String title, String releaseDate, double votesAverage, String poster, String synopsis, String imageUrl) {
+    public Movie(int id, String title, String releaseDate, double votesAverage, String overview, String posterPath) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
         this.votesAverage = votesAverage;
-        this.poster = poster;
-        this.synopsis = synopsis;
-        this.imageUrl = imageUrl;
+        this.overview = overview;
+        this.posterPath = posterPath;
     }
 
     public int getId() {
@@ -32,12 +39,12 @@ public class Movie {
         this.id = id;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getPosterPath() {
+        return MOVIES_IMAGE_URL+IMAGE_SIZE+ posterPath;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public String getTitle() {
@@ -64,19 +71,11 @@ public class Movie {
         this.votesAverage = votesAverage;
     }
 
-    public String getPoster() {
-        return poster;
+    public String getOverview() {
+        return overview;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 }
