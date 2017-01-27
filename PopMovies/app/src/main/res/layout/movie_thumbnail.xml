@@ -8,5 +8,9 @@
         android:id="@+id/MovieThumbnailImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside"/>
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"
+        />
+
 </LinearLayout>

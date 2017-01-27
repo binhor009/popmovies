@@ -1,7 +1,6 @@
 package com.fabiofilho.popmovies.Fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,12 +25,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivityFragment extends Fragment {
+public class MainFragment extends Fragment {
 
     private View mRootView;
     private GridView mGridView;
 
-    public MainActivityFragment() {
+    public MainFragment() {
 
         setHasOptionsMenu(true);
     }
@@ -103,8 +102,6 @@ public class MainActivityFragment extends Fragment {
                 @Override
                 public void onNetworkUtilsGetsIOException(IOException e) {
                     super.onNetworkUtilsGetsIOException(e);
-
-                    Snackbar.make(mRootView, getString(R.string.warning_message_failed_to_connect_to_server), Snackbar.LENGTH_LONG).show();
                 }
             };
 
