@@ -9,9 +9,9 @@ public class Movie {
     public static final String MOVIES_URL =  "https://api.themoviedb.org/3/movie/";
     public static final String MOVIES_IMAGE_URL =  "http://image.tmdb.org/t/p/";
 
-    public static final String MOVIES_ORDER_POPULAR = "popular";
-    public static final String MOVIES_ORDER_TOP_RATED = "top_rated";
-    public static boolean sChosenPopularMovieOrder = true;
+    public static final String[] MOVIE_ORDER = {
+            "popular", "top_rated"
+    };
 
     private static final String IMAGE_SIZE = "w185";
 

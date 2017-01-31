@@ -1,5 +1,6 @@
 package com.fabiofilho.popmovies.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -7,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import com.fabiofilho.popmovies.Objects.Connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.Objects.Connections.NetworkUtils;
+import com.fabiofilho.popmovies.Objects.Dialogs.MovieOrderDialog;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.Objects.Movies.MovieAdapter;
 import com.fabiofilho.popmovies.Objects.Movies.MovieJSON;
@@ -30,6 +33,7 @@ public class MainFragment extends Fragment {
     private View mRootView;
     private GridView mGridView;
 
+
     public MainFragment() {
 
         setHasOptionsMenu(true);
@@ -44,9 +48,8 @@ public class MainFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_movie_sort) {
-            //TODO: Change the way this stores the current movie order.
-            Movie.sChosenPopularMovieOrder = !Movie.sChosenPopularMovieOrder;
-            updateMoviesAdapter();
+
+            openMovieDialogOrder();
             return true;
         }
 
@@ -67,22 +70,38 @@ public class MainFragment extends Fragment {
     private void creationOfObjects() {
 
         mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
-        updateMoviesAdapter();
+        setGridViewListener();
+        updateMoviesAdapter(Movie.MOVIE_ORDER[0]);
     }
 
-    private void updateMoviesAdapter() {
+    private void setGridViewListener(){
+
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(mRootView.getContext(),
+                        ((Movie)mGridView.getAdapter().getItem(position)).getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void openMovieDialogOrder(){
+
+        MovieOrderDialog movieOrderDialog = new MovieOrderDialog();
+        movieOrderDialog.onCreateDialog(getActivity(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                updateMoviesAdapter(Movie.MOVIE_ORDER[which]);
+            }
+        }).show();
+    }
+
+    private void updateMoviesAdapter(String movieOrder) {
 
         try {
-            String movieOrderBy = Movie.sChosenPopularMovieOrder ? Movie.MOVIES_ORDER_POPULAR : Movie.MOVIES_ORDER_TOP_RATED;
-            URL url = NetworkUtils.buildURL(Movie.MOVIES_URL + movieOrderBy, true);
-
+            URL url = NetworkUtils.buildURL(Movie.MOVIES_URL + movieOrder, true);
             AsyncTaskRequest asyncTaskRequest = new AsyncTaskRequest() {
 
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    Toast.makeText(mRootView.getContext(), getString(R.string.info_message_loading_movies), Toast.LENGTH_SHORT).show();
-                }
 
                 @Override
                 protected void onPostExecute(String response) {
@@ -94,6 +113,7 @@ public class MainFragment extends Fragment {
                                         mRootView.getContext(), (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response)
                                 )
                         );
+
                     } catch (JSONException e) {
                         Log.e(Utilities.getMethodNameForLog(), e.toString());
                     }

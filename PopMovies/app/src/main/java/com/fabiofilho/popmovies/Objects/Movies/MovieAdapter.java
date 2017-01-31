@@ -19,12 +19,10 @@ import java.util.ArrayList;
 public class MovieAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Movie> mMovieList;
-    private LayoutInflater mLayoutInflater;
 
     public MovieAdapter(Context context, ArrayList<Movie> movieList) {
         mContext = context;
         mMovieList = movieList;
-        mLayoutInflater = LayoutInflater.from(context);
     }
 
     public int getCount() {
@@ -46,12 +44,12 @@ public class MovieAdapter extends BaseAdapter {
          if (view == null) {
 
              ImageView imageView;
-            LayoutInflater inflater = LayoutInflater.from(mContext);
+             LayoutInflater inflater = LayoutInflater.from(mContext);
 
-            view = inflater.inflate(R.layout.movie_thumbnail, null);
-            imageView = (ImageView) view.findViewById(R.id.MovieThumbnailImageView);
+             view = inflater.inflate(R.layout.movie_thumbnail, null);
+             imageView = (ImageView) view.findViewById(R.id.MovieThumbnailImageView);
 
-            Picasso.with(mContext).load(mMovieList.get(position).getPosterPath()).into(imageView);
+             Picasso.with(mContext).load(mMovieList.get(position).getPosterPath()).into(imageView);
         }
 
         return view;

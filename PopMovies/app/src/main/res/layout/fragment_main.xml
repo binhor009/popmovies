@@ -13,19 +13,15 @@
     tools:showIn="@layout/activity_main">
 
     <GridView
+        android:id="@+id/FragmentMainMoviesGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/FragmentMainMoviesGridView"
+        android:horizontalSpacing="3dp"
         android:stretchMode="columnWidth"
         android:numColumns="auto_fit"
         android:verticalSpacing="3dp"
         android:columnWidth="120dp"
-        android:horizontalSpacing="3dp"
-        android:clickable="true"
-        android:focusable="true">
-
+        >
 
     </GridView>
 

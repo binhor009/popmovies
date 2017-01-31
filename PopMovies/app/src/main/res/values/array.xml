@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- Movie order -->
+    <string-array name="dialog_movie_order_content">
+        <item>Popular</item>
+        <item>Top rated</item>
+    </string-array>
+    <!-- End Movie order -->
+
+
+</resources>

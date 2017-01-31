@@ -10,6 +10,18 @@
     <string name="warning_message_no_internet_connection">No internet connection!</string>
     <string name="warning_message_failed_to_connect_to_server">Failed to connect to server!</string>
 
-
     <!-- End of User Messages -->
+
+
+    <!-- Dialogs -->
+
+        <!-- Movie order -->
+        <string name="dialog_movie_order_title" translatable="true">Choose the order</string>
+        <!-- Movie order -->
+
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel" translatable="true">Cancel</string>
+
+    <!-- End Dialogs -->
+
 </resources>
