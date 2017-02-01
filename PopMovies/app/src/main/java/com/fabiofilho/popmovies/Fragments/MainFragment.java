@@ -1,6 +1,7 @@
 package com.fabiofilho.popmovies.Fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
+import com.fabiofilho.popmovies.Activities.MovieDetailsActivity;
 import com.fabiofilho.popmovies.Objects.Connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.Objects.Connections.NetworkUtils;
 import com.fabiofilho.popmovies.Objects.Dialogs.MovieOrderDialog;
@@ -79,11 +80,21 @@ public class MainFragment extends Fragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(mRootView.getContext(),
-                        ((Movie)mGridView.getAdapter().getItem(position)).getTitle(), Toast.LENGTH_SHORT).show();
+                openMovieDetails(position);
             }
         });
     }
+
+
+    private void openMovieDetails(int position){
+
+        String[] movieDetails = ((Movie) mGridView.getAdapter().getItem(position)).toArray();
+
+        Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
+        intent.putExtra(MovieDetailsActivity.EXTRA_KEY, movieDetails);
+        startActivity(intent);
+    }
+
 
     private void openMovieDialogOrder(){
 

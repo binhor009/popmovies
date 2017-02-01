@@ -78,4 +78,29 @@ public class Movie {
     public void setOverview(String overview) {
         this.overview = overview;
     }
+
+
+    public static Movie loadFromArray(String[] movie){
+
+        return new Movie(
+                Integer.parseInt(movie[0]),
+                movie[1],
+                movie[2],
+                Float.parseFloat(movie[3]),
+                movie[4],
+                movie[5]
+        );
+    }
+
+    public String[] toArray(){
+
+        return new String[]{
+            String.valueOf(id),
+            title,
+            releaseDate,
+            String.valueOf(votesAverage),
+            overview,
+            posterPath
+        };
+    }
 }

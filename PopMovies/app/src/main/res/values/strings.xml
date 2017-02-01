@@ -1,14 +1,20 @@
 <resources>
-    <string name="app_name">PopMovies</string>
-    <string name="action_movie_sort">Settings</string>
 
+    <!-- Action Bar values -->
+
+    <string name="action_movie_details">Movie details</string>
+    <string name="action_movie_sort">Settings</string>
+    <string name="app_name">PopMovies</string>
+
+    <!-- End of Menu values -->
 
 
     <!-- User Messages -->
+
     <string name="info_message_loading_movies">Loading movies &#8230;</string>
 
-    <string name="warning_message_no_internet_connection">No internet connection!</string>
     <string name="warning_message_failed_to_connect_to_server">Failed to connect to server!</string>
+    <string name="warning_message_no_internet_connection">No internet connection!</string>
 
     <!-- End of User Messages -->
 
@@ -22,6 +28,6 @@
     <string name="dialog_ok">Ok</string>
     <string name="dialog_cancel" translatable="true">Cancel</string>
 
-    <!-- End Dialogs -->
+    <!-- End of Dialogs -->
 
 </resources>
