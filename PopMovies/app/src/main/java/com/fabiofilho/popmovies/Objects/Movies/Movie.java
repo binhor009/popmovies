@@ -1,10 +1,12 @@
 package com.fabiofilho.popmovies.Objects.Movies;
 
+import java.io.Serializable;
+
 /**
  * Created by dialam on 23/01/17.
  */
 
-public class Movie {
+public class Movie implements Serializable {
 
     public static final String MOVIES_URL =  "https://api.themoviedb.org/3/movie/";
     public static final String MOVIES_IMAGE_URL =  "http://image.tmdb.org/t/p/";
@@ -79,28 +81,4 @@ public class Movie {
         this.overview = overview;
     }
 
-
-    public static Movie loadFromArray(String[] movie){
-
-        return new Movie(
-                Integer.parseInt(movie[0]),
-                movie[1],
-                movie[2],
-                Float.parseFloat(movie[3]),
-                movie[4],
-                movie[5]
-        );
-    }
-
-    public String[] toArray(){
-
-        return new String[]{
-            String.valueOf(id),
-            title,
-            releaseDate,
-            String.valueOf(votesAverage),
-            overview,
-            posterPath
-        };
-    }
 }

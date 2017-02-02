@@ -2,8 +2,9 @@ package com.fabiofilho.popmovies.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
-import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.R;
 
 /**
@@ -12,21 +13,31 @@ import com.fabiofilho.popmovies.R;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-
     public static final String EXTRA_KEY = "com.fabiofilho.popmovies.Activities.MovieDetailsActivity.EXTRA_KEY";
 
-    private Movie mMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movie_details);
+        setContentView(R.layout.activity_movie_details);
 
-        // Loads the movie from an array received.
-        mMovie = Movie.loadFromArray(getIntent().getStringArrayExtra(EXTRA_KEY));
+        loadToolbar();
     }
 
 
+    private void loadToolbar(){
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.movie_details_toolbar);
+        setSupportActionBar(toolbar);
+
+        if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_movie_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
 }

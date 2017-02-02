@@ -63,12 +63,12 @@ public class MainFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        creationOfObjects();
+        referScreenObjects();
 
         return mRootView;
     }
 
-    private void creationOfObjects() {
+    private void referScreenObjects() {
 
         mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
         setGridViewListener();
@@ -88,10 +88,10 @@ public class MainFragment extends Fragment {
 
     private void openMovieDetails(int position){
 
-        String[] movieDetails = ((Movie) mGridView.getAdapter().getItem(position)).toArray();
-
+        Movie movie = ((Movie) mGridView.getAdapter().getItem(position));
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
-        intent.putExtra(MovieDetailsActivity.EXTRA_KEY, movieDetails);
+        intent.putExtra(MovieDetailsActivity.EXTRA_KEY, movie);
+
         startActivity(intent);
     }
 

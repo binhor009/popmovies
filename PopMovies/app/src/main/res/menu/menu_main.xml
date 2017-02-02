@@ -6,7 +6,8 @@
     <item
         android:id="@+id/action_movie_sort"
         android:orderInCategory="100"
-        android:title="@string/action_movie_sort"
+        android:title="@string/action_movie_order"
         android:icon="@mipmap/ic_sort_white_24dp"
         app:showAsAction="always"/>
+
 </menu>
