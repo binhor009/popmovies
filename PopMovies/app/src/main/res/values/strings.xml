@@ -32,4 +32,10 @@
 
     <!-- End of Dialogs -->
 
+
+    <!-- Movie details -->
+    <string name="fragment_movie_details_button_favorite_marker" translatable="true">Mark as Favorite</string>|
+    <string name="fragment_movie_details_text_view_subtitle_trails" translatable="true">Trailers</string>|
+    <!-- End of Movie details -->
+
 </resources>

@@ -24,6 +24,16 @@ public class Movie implements Serializable {
     private String overview;
     private String posterPath;
 
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    private String duration;
+
     public Movie(int id, String title, String releaseDate, double votesAverage, String overview, String posterPath) {
         this.id = id;
         this.title = title;
