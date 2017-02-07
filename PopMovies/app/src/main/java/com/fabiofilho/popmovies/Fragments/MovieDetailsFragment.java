@@ -85,10 +85,9 @@ public class MovieDetailsFragment extends Fragment {
 
         // Loads the content.
         mTextViewMovieTitle.setText(mMovieChosen.getTitle());
-        mTextViewMovieYear.setText(mMovieChosen.getReleaseDate());
+        mTextViewMovieYear.setText(mMovieChosen.getYearOfReleaseDate());
         mTextViewMovieDuration.setVisibility(View.GONE);
         mTextViewMovieRating.setText(String.valueOf(mMovieChosen.getVotesAverage()));
-        mButtonFavoriteMarker.setText(getResources().getString(R.string.fragment_movie_details_button_favorite_marker));
         mTextViewMovieDescription.setText(String.valueOf(mMovieChosen.getOverview()));
     }
 

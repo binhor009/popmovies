@@ -55,10 +55,6 @@ public class Movie implements Serializable {
         return MOVIES_IMAGE_URL+IMAGE_SIZE+ posterPath;
     }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -71,24 +67,17 @@ public class Movie implements Serializable {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
+    public String getVotesAverage() {
 
-    public double getVotesAverage() {
-        return votesAverage;
-    }
-
-    public void setVotesAverage(double votesAverage) {
-        this.votesAverage = votesAverage;
+        return String.valueOf(votesAverage)+"/10";
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public String getYearOfReleaseDate(){
+        return releaseDate.split("-")[0];
     }
 
 }
