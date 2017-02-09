@@ -15,7 +15,7 @@ public class Movie implements Serializable {
             "popular", "top_rated"
     };
 
-    private static final String IMAGE_SIZE = "w185";
+    private static final String IMAGE_SIZE = "w342";
 
     private int id;
     private String title;

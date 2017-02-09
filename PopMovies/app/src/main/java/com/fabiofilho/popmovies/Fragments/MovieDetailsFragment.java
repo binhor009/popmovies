@@ -1,6 +1,7 @@
 package com.fabiofilho.popmovies.Fragments;
 
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -65,6 +66,11 @@ public class MovieDetailsFragment extends Fragment {
 
 
     private void referScreenObjects() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            mRootView.findViewById(R.id.content_movie_details_toolbar_shadow).setVisibility(View.GONE);
+            mRootView.findViewById(R.id.content_movie_details_text_view_title_shadow).setVisibility(View.GONE);
+        }
 
         mImageView = (ImageView) mRootView.findViewById(R.id.content_movie_details_image_view_post);
 

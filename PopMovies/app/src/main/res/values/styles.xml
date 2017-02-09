@@ -25,13 +25,11 @@
     </style>
 
     <style name="movie_details_text_view_rating">
-        <item name="android:textSize">15sp</item>
         <item name="android:textColor">#000</item>
         <item name="android:layout_marginTop">10dp</item>
     </style>
 
     <style name="movie_details_button_favorite_marker">
-        <item name="android:textSize">10sp</item>
         <item name="android:background">@color/colorLightAccent</item>
         <item name="android:layout_marginTop">10dp</item>
     </style>

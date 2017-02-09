@@ -65,27 +65,17 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_gravity="top">
+                android:layout_marginTop="20dp">
 
-                <LinearLayout
-                    android:layout_height="match_parent"
+                <!-- Poster -->
+                <ImageView
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/demo"
+                    android:id="@+id/content_movie_details_image_view_post"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    >
-
-                    <!-- Poster -->
-                    <ImageView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:id="@+id/content_movie_details_image_view_post"
-                        android:layout_margin="10dp"
-                        android:scaleType="fitStart"
-                        android:adjustViewBounds="true"
-                        />
-                    <!-- End of Poster -->
-
-                </LinearLayout>
+                    android:layout_margin="10dp"/>
+                <!-- End of Poster -->
 
                 <!-- Information on the right of the poster. -->
                 <LinearLayout
@@ -100,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/content_movie_details_text_view_year"
-                        android:textSize="26sp"/>
+                        android:textSize="40sp"/>
 
                     <TextView
                         android:text="TextView"
@@ -113,32 +103,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/content_movie_details_text_view_rating"
-                        android:textSize="15sp"
+                        android:textSize="20sp"
                         style="@style/movie_details_text_view_rating"/>
 
                     <Button
                         android:text="@string/fragment_movie_details_button_favorite_marker"
-                        android:layout_width="70dp"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/content_movie_details_button_favorite_marker"
-                        android:textSize="10sp"
+                        android:textSize="17sp"
                         style="@style/movie_details_button_favorite_marker"
                         />
+
+                    <!-- Movie Description -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/content_movie_details_text_view_description"
+                        android:text="Dory is reunited with her friends Nemo and Marlin in the search for answers about her past. What can she remember? Who are her parents? And where did she learn to speak Whale?"
+                        android:textSize="25sp"
+                        style="@style/movie_details_bottom_data"/>
+
+                    <!-- End of Movie Description -->
 
                 </LinearLayout>
                 <!-- End of Information on the right of the poster. -->
 
             </LinearLayout>
 
-            <!-- Movie Description -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/content_movie_details_text_view_description"
-                android:text="Dory is reunited with her friends Nemo and Marlin in the search for answers about her past. What can she remember? Who are her parents? And where did she learn to speak Whale?"
-                style="@style/movie_details_bottom_data"/>
-
-            <!-- End of Movie Description -->
 
         </LinearLayout>
 
