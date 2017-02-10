@@ -21,6 +21,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        //Loads the toolbar object.
         loadToolbar();
     }
 
@@ -30,6 +31,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.movie_details_toolbar);
         setSupportActionBar(toolbar);
 
+        // Actives the back arrow if there is a "Support Action Bar".
         if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

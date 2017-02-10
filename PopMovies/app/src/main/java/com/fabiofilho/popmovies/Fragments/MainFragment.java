@@ -16,6 +16,7 @@ import com.fabiofilho.popmovies.Activities.MovieDetailsActivity;
 import com.fabiofilho.popmovies.Objects.Connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.Objects.Connections.NetworkUtils;
 import com.fabiofilho.popmovies.Objects.Dialogs.MovieOrderDialog;
+import com.fabiofilho.popmovies.Objects.Dialogs.SimpleDialog;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.Objects.Movies.MovieAdapter;
 import com.fabiofilho.popmovies.Objects.Movies.MovieJSON;
@@ -24,7 +25,6 @@ import com.fabiofilho.popmovies.R;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,14 +42,12 @@ public class MainFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_movie_sort) {
 
+            //Opens the movie dialog order.
             openMovieDialogOrder();
             return true;
         }
@@ -63,19 +61,36 @@ public class MainFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        //Refers the objects to class variables.
         referScreenObjects();
+
+        //Setting the default values for them.
+        loadObjects();
 
         return mRootView;
     }
 
-    private void referScreenObjects() {
+    /**
+     * Loads the properties from the objects.
+     */
+    private void loadObjects() {
 
-        mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
-        setGridViewListener();
+        setGridViewListeners();
         updateMoviesAdapter(Movie.MOVIE_ORDER[0]);
     }
 
-    private void setGridViewListener(){
+    /**
+     * Refers the objects from screen.
+     */
+    private void referScreenObjects() {
+
+        mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
+    }
+
+    /**
+     * Defines all grid view events.
+     */
+    private void setGridViewListeners(){
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -86,6 +101,11 @@ public class MainFragment extends Fragment {
     }
 
 
+    /**
+     * Opens the movie details activity and sends an instance of Movie class
+     * chosen by the index @position.
+     * @param position
+     */
     private void openMovieDetails(int position){
 
         Movie movie = ((Movie) mGridView.getAdapter().getItem(position));
@@ -96,6 +116,9 @@ public class MainFragment extends Fragment {
     }
 
 
+    /**
+     * Create an instance of MovieOrderDialog class and shows it to the user.
+     */
     private void openMovieDialogOrder(){
 
         MovieOrderDialog movieOrderDialog = new MovieOrderDialog();
@@ -107,6 +130,10 @@ public class MainFragment extends Fragment {
         }).show();
     }
 
+    /***
+     *  Download the movies content and update the MoviesAdapter with this data.
+     * @param movieOrder
+     */
     private void updateMoviesAdapter(String movieOrder) {
 
         try {
@@ -119,21 +146,23 @@ public class MainFragment extends Fragment {
                     super.onPostExecute(response);
 
                     try {
-                        mGridView.setAdapter(
-                                new MovieAdapter(
-                                        mRootView.getContext(), (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response)
-                                )
-                        );
+
+                        if(response !=null) {
+                            mGridView.setAdapter(
+                                    new MovieAdapter(
+                                            mRootView.getContext(),
+                                            (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response)
+                                    )
+                            );
+                        }else{
+                            if(isAdded()) askToUserTryGetContentAgain();
+                        }
 
                     } catch (JSONException e) {
                         Log.e(Utilities.getMethodNameForLog(), e.toString());
                     }
                 }
 
-                @Override
-                public void onNetworkUtilsGetsIOException(IOException e) {
-                    super.onNetworkUtilsGetsIOException(e);
-                }
             };
 
             asyncTaskRequest.execute(url);
@@ -141,6 +170,20 @@ public class MainFragment extends Fragment {
         }catch (MalformedURLException e){
             Log.e(Utilities.getMethodNameForLog(), e.toString());
         }
+    }
+
+    /**
+     *  Ask if the user wants try to get the content again.
+     */
+    private void askToUserTryGetContentAgain() {
+
+        SimpleDialog simpleDialog = new SimpleDialog();
+        simpleDialog.onCreateDialog(getActivity(), R.string.dialog_message_failed_load_the_content_try_again, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                updateMoviesAdapter(Movie.MOVIE_ORDER[MovieOrderDialog.getLastItemIndexChosen()]);
+            }
+        }, null).show();
     }
 
 }
