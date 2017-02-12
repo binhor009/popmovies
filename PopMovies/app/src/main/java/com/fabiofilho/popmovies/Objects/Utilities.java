@@ -6,10 +6,21 @@ package com.fabiofilho.popmovies.Objects;
 
 public class Utilities {
 
-    public static String getMethodNameForLog(){
+    /**
+     * Gets and returns the complete "tree" - tree may mean the package and the method inside a class
+     * that calls this method. Example of an output: com.your_complete_package.YourClass.yourMethod()
+     * @return methodName
+     */
+    public static String getMethodName(){
 
+        String methodName;
+
+        // Gets the stack element which calls this method.
         StackTraceElement stackTraceElement = new Throwable().getStackTrace()[1];
 
-        return stackTraceElement.getClassName()+"."+ stackTraceElement.getMethodName()+"()";
+        // Concatenates the class and its method that has been gotten.
+        methodName = stackTraceElement.getClassName()+"."+ stackTraceElement.getMethodName()+"()";
+
+        return methodName;
     }
 }

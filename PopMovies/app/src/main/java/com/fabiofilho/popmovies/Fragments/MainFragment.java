@@ -3,6 +3,7 @@ package com.fabiofilho.popmovies.Fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,12 +29,16 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainFragment extends Fragment {
 
     private View mRootView;
     private GridView mGridView;
+    private AsyncTaskRequest mAsyncTaskRequest;
+    private ArrayList<Movie> mMovieList;
 
+    private final String MOVIE_LIST = "MOVIE_LIST";
 
     public MainFragment() {
 
@@ -47,8 +52,9 @@ public class MainFragment extends Fragment {
 
         if (id == R.id.action_movie_sort) {
 
-            //Opens the movie dialog order.
+            // Opens the movie dialog order.
             openMovieDialogOrder();
+
             return true;
         }
 
@@ -61,13 +67,29 @@ public class MainFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //Refers the objects to class variables.
+        // Refers the objects to class variables.
         referScreenObjects();
 
-        //Setting the default values for them.
+        // Setting the default values for them.
         loadObjects();
 
         return mRootView;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(MOVIE_LIST, mMovieList);
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+
     }
 
     /**
@@ -76,7 +98,7 @@ public class MainFragment extends Fragment {
     private void loadObjects() {
 
         setGridViewListeners();
-        updateMoviesAdapter(Movie.MOVIE_ORDER[0]);
+        updateMoviesAdapter(Movie.MOVIE_ORDER[MovieOrderDialog.getLastItemIndexChosen()]);
     }
 
     /**
@@ -103,12 +125,15 @@ public class MainFragment extends Fragment {
 
     /**
      * Opens the movie details activity and sends an instance of Movie class
-     * chosen by the index @position.
+     * chosen by user.
      * @param position
      */
     private void openMovieDetails(int position){
 
+        // Casts the Movie instance by the position to send it through intent to MovieDetailsActivity.
         Movie movie = ((Movie) mGridView.getAdapter().getItem(position));
+
+        // Creates an intent with a Movie instance as parameter.
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
         intent.putExtra(MovieDetailsActivity.EXTRA_KEY, movie);
 
@@ -125,6 +150,8 @@ public class MainFragment extends Fragment {
         movieOrderDialog.onCreateDialog(getActivity(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                // Updates the movies adapter if the user has chosen a different order.
                 updateMoviesAdapter(Movie.MOVIE_ORDER[which]);
             }
         }).show();
@@ -138,37 +165,45 @@ public class MainFragment extends Fragment {
 
         try {
             URL url = NetworkUtils.buildURL(Movie.MOVIES_URL + movieOrder, true);
-            AsyncTaskRequest asyncTaskRequest = new AsyncTaskRequest() {
-
+            mAsyncTaskRequest = new AsyncTaskRequest() {
 
                 @Override
                 protected void onPostExecute(String response) {
                     super.onPostExecute(response);
 
                     try {
+                        // Checks if the fragment is attached to activity.
+                        if (isAdded()) {
 
-                        if(response !=null) {
-                            mGridView.setAdapter(
-                                    new MovieAdapter(
-                                            mRootView.getContext(),
-                                            (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response)
-                                    )
-                            );
-                        }else{
-                            if(isAdded()) askToUserTryGetContentAgain();
+                            // Checks if the response from http request is different of null to load
+                            // the data on the grid view.
+                            if (response != null) {
+
+                                mMovieList = (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response);
+
+                                mGridView.setAdapter(
+                                        new MovieAdapter(
+                                                mRootView.getContext(),
+                                                mMovieList
+                                        )
+                                );
+                            }else{
+                                askToUserTryGetContentAgain();
+                            }
                         }
 
                     } catch (JSONException e) {
-                        Log.e(Utilities.getMethodNameForLog(), e.toString());
+                        Log.e(Utilities.getMethodName(), e.toString());
                     }
                 }
 
             };
 
-            asyncTaskRequest.execute(url);
+            // Initialize the parallel process to load content.
+            mAsyncTaskRequest.execute(url);
 
         }catch (MalformedURLException e){
-            Log.e(Utilities.getMethodNameForLog(), e.toString());
+            Log.e(Utilities.getMethodName(), e.toString());
         }
     }
 
@@ -181,9 +216,18 @@ public class MainFragment extends Fragment {
         simpleDialog.onCreateDialog(getActivity(), R.string.dialog_message_failed_load_the_content_try_again, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                // Tries to update the adapter if the user wants.
                 updateMoviesAdapter(Movie.MOVIE_ORDER[MovieOrderDialog.getLastItemIndexChosen()]);
             }
-        }, null).show();
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //Finalizes the activity if the user doesn't want.
+                getActivity().finish();
+            }
+        }).show();
     }
 
 }

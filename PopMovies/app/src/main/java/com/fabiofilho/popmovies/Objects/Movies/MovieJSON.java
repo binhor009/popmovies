@@ -1,5 +1,7 @@
 package com.fabiofilho.popmovies.Objects.Movies;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,19 +23,31 @@ public class MovieJSON {
     private static final String OVERVIEW_FIELD     = "overview";
 
 
-
-    public static List<Movie> createMovieListByJSON(String response) throws JSONException {
+    /**
+     * Creates a movie list through a json string that has a singular struct.
+     * This struct belongs to TheMovieDB.org.
+     * @param response
+     * @return movieList
+     * @throws JSONException e
+     */
+    public static List<Movie> createMovieListByJSON(@Nullable String response) throws JSONException {
 
         List<Movie> movieList = new ArrayList<>();
 
+        // Returns an empty list if the response is null.
         if(response==null) return movieList;
 
         try {
+            // Initialize a json object.
             JSONObject responseJson = new JSONObject(response);
+
+            // Gets an array from the object created that contains each movie.
             JSONArray results = responseJson.getJSONArray(RESULTS_FIELD);
 
+            // Looping the array.
             for(int index = 0; index < results.length(); index++){
 
+                // Creates a temporary json object to transform it into a movie one.
                 JSONObject jsonObject = results.getJSONObject(index);
 
                 Movie movie = new Movie(
@@ -45,6 +59,7 @@ public class MovieJSON {
                         jsonObject.getString(POSTER_PATH_FIELD)
                 );
 
+                // Adds inside the movie list the transformed json object.
                 movieList.add(movie);
             }
 

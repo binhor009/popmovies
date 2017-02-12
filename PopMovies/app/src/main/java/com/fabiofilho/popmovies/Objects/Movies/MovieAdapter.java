@@ -1,6 +1,7 @@
 package com.fabiofilho.popmovies.Objects.Movies;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,19 +40,27 @@ public class MovieAdapter extends BaseAdapter {
         return 0;
     }
 
-    // Create a new ImageView for each item referenced by the Adapter
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, @Nullable View view, ViewGroup viewGroup) {
 
         MovieHolder movieHolder;
 
-        // if it's not recycled, initialize the object.
+        // If it's not recycled, initialize the object.
          if (view == null) {
+
+             // Inflate the movie_thumbnail layout.
              view = mLayoutInflater.inflate(R.layout.movie_thumbnail, null);
+
+             // Creates a MovieHolder instance that works as a struct of movie_thumbnail layout.
              movieHolder = new MovieHolder();
+
+             // Refers the movie_thumbnail layout.
              movieHolder.imageView = (ImageView) view.findViewById(R.id.MovieThumbnailImageView);
+
+             // Sets the movieHolder as a tag in the view.
              view.setTag(movieHolder);
+
         }else{
-            movieHolder = (MovieHolder)view.getTag();
+            movieHolder = (MovieHolder) view.getTag();
         }
 
         Picasso.with(mContext).load(mMovieList.get(position).getPosterPath()).into(movieHolder.imageView);

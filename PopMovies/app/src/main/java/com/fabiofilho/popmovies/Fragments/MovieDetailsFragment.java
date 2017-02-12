@@ -36,7 +36,6 @@ public class MovieDetailsFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -63,6 +62,7 @@ public class MovieDetailsFragment extends Fragment {
 
     private void referScreenObjects() {
 
+        // Makes the shadow objects invisible if the android version is Lollipop or newer.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             mRootView.findViewById(R.id.content_movie_details_toolbar_shadow).setVisibility(View.GONE);
             mRootView.findViewById(R.id.content_movie_details_text_view_title_shadow).setVisibility(View.GONE);
@@ -83,6 +83,7 @@ public class MovieDetailsFragment extends Fragment {
         // Loads the movie from the caller activity.
         mMovieChosen = (Movie) getActivity().getIntent().getSerializableExtra(EXTRA_KEY);
 
+        //Loads the post image using Picasso API.
         Picasso.with(mRootView.getContext()).load(mMovieChosen.getPosterPath()).into(mImageView);
 
         // Loads the content.
