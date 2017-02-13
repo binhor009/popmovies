@@ -47,7 +47,4 @@ public class MovieOrderDialog extends DialogFragment{
         return builder.create();
     }
 
-    public static int getLastItemIndexChosen(){
-        return sItemIndexChecked;
-    }
 }

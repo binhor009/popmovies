@@ -36,9 +36,10 @@ public class MainFragment extends Fragment {
     private View mRootView;
     private GridView mGridView;
     private AsyncTaskRequest mAsyncTaskRequest;
-    private ArrayList<Movie> mMovieList;
+    private int mIndexMovieOrderChosen = 0;
 
-    private final String MOVIE_LIST = "MOVIE_LIST";
+
+    private final String SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN = "SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN";
 
     public MainFragment() {
 
@@ -67,6 +68,9 @@ public class MainFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        // Loads the saved variables.
+        loadSavedInstanceState(savedInstanceState);
+
         // Refers the objects to class variables.
         referScreenObjects();
 
@@ -76,19 +80,26 @@ public class MainFragment extends Fragment {
         return mRootView;
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
+
+        // Saves the current movie order.
+        outState.putInt(SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN, mIndexMovieOrderChosen);
+
         super.onSaveInstanceState(outState);
-
-        outState.putSerializable(MOVIE_LIST, mMovieList);
-
     }
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    /**
+     * Loads the saved variables.
+     * @param savedInstanceState
+     */
+    private void loadSavedInstanceState(@Nullable Bundle savedInstanceState) {
 
+        if(savedInstanceState != null){
+
+            // Loads the movie order.
+            mIndexMovieOrderChosen = savedInstanceState.getInt(SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN);
+        }
 
     }
 
@@ -98,7 +109,7 @@ public class MainFragment extends Fragment {
     private void loadObjects() {
 
         setGridViewListeners();
-        updateMoviesAdapter(Movie.MOVIE_ORDER[MovieOrderDialog.getLastItemIndexChosen()]);
+        updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
     }
 
     /**
@@ -179,12 +190,13 @@ public class MainFragment extends Fragment {
                             // the data on the grid view.
                             if (response != null) {
 
-                                mMovieList = (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response);
+                                ArrayList<Movie> movieList;
+                                movieList = (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response);
 
                                 mGridView.setAdapter(
                                         new MovieAdapter(
                                                 mRootView.getContext(),
-                                                mMovieList
+                                                movieList
                                         )
                                 );
                             }else{
@@ -218,7 +230,7 @@ public class MainFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 // Tries to update the adapter if the user wants.
-                updateMoviesAdapter(Movie.MOVIE_ORDER[MovieOrderDialog.getLastItemIndexChosen()]);
+                updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
             }
         }, new DialogInterface.OnClickListener() {
             @Override
