@@ -41,7 +41,10 @@ public class MovieDetailsFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
 
+        // Refers the objects to class variables.
         referScreenObjects();
+
+        // Loads the movie chosen.
         loadMovie();
 
         return mRootView;
@@ -88,7 +91,7 @@ public class MovieDetailsFragment extends Fragment {
 
         // Loads the content.
         mTextViewMovieTitle.setText(mMovieChosen.getTitle());
-        mTextViewMovieYear.setText(mMovieChosen.getYearOfReleaseDate());
+        mTextViewMovieYear.setText(mMovieChosen.getReleaseDate(mRootView.getContext()));
         mTextViewMovieDuration.setVisibility(View.GONE);
         mTextViewMovieRating.setText(String.valueOf(mMovieChosen.getVotesAverage()));
         mTextViewMovieDescription.setText(String.valueOf(mMovieChosen.getOverview()));

@@ -1,6 +1,12 @@
 package com.fabiofilho.popmovies.Objects.Movies;
 
+import android.content.Context;
+import android.text.format.DateFormat;
+
 import java.io.Serializable;
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by dialam on 23/01/17.
@@ -63,10 +69,6 @@ public class Movie implements Serializable {
         this.title = title;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
     public String getVotesAverage() {
 
         return String.valueOf(votesAverage)+"/10";
@@ -77,14 +79,20 @@ public class Movie implements Serializable {
     }
 
     /**
-     * Splits the releaseDate through this char: '-', and gets only the release year.
-     * @return releaseYear
+     * Formats the releaseDate correctly.
+     * @param context
+     * @return releaseDate
      */
-    public String getYearOfReleaseDate(){
+    public String getReleaseDate(Context context){
 
-        String releaseYear = releaseDate.split("-")[0];
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(
+                Integer.parseInt(releaseDate.split("-")[0]),
+                Integer.parseInt(releaseDate.split("-")[1]),
+                Integer.parseInt(releaseDate.split("-")[2])
+        );
 
-        return releaseYear;
+        return DateFormat.getMediumDateFormat(context).format(calendar.getTime());
     }
 
 }
