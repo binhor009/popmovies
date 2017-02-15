@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.inputmethodservice.Keyboard;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 
-import com.fabiofilho.popmovies.Objects.Utilities;
 import com.fabiofilho.popmovies.R;
 
 

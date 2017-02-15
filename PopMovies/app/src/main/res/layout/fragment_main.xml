@@ -12,6 +12,24 @@
     tools:context="com.fabiofilho.popmovies.Fragments.MainFragment"
     tools:showIn="@layout/activity_main">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/FragmentMainMoviesProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_horizontal|center_vertical"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"/>
+
     <GridView
         android:id="@+id/FragmentMainMoviesGridView"
         android:layout_width="match_parent"
@@ -20,8 +38,7 @@
         android:stretchMode="columnWidth"
         android:numColumns="auto_fit"
         android:verticalSpacing="3dp"
-        android:columnWidth="120dp">
+        android:columnWidth="120dp"/>
 
-    </GridView>
 
 </RelativeLayout>

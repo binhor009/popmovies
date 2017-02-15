@@ -3,8 +3,10 @@ package com.fabiofilho.popmovies.Activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 
+import com.fabiofilho.popmovies.Objects.Utils;
 import com.fabiofilho.popmovies.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,4 +26,5 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 }

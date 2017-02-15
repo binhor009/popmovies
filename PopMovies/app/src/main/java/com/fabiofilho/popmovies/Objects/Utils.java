@@ -4,7 +4,7 @@ package com.fabiofilho.popmovies.Objects;
  * Created by dialam on 25/01/17.
  */
 
-public class Utilities {
+public class Utils {
 
     /**
      * Gets and returns the complete "tree" - tree may mean the package and the method inside a class

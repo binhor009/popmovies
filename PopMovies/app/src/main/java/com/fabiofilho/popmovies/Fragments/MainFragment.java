@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.fabiofilho.popmovies.Activities.MovieDetailsActivity;
 import com.fabiofilho.popmovies.Objects.Connections.AsyncTaskRequest;
@@ -21,7 +22,7 @@ import com.fabiofilho.popmovies.Objects.Dialogs.SimpleDialog;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.Objects.Movies.MovieAdapter;
 import com.fabiofilho.popmovies.Objects.Movies.MovieJSON;
-import com.fabiofilho.popmovies.Objects.Utilities;
+import com.fabiofilho.popmovies.Objects.Utils;
 import com.fabiofilho.popmovies.R;
 
 import org.json.JSONException;
@@ -29,7 +30,6 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainFragment extends Fragment {
 
@@ -37,6 +37,7 @@ public class MainFragment extends Fragment {
     private GridView mGridView;
     private AsyncTaskRequest mAsyncTaskRequest;
     private int mIndexMovieOrderChosen = 0;
+    private ProgressBar mProgressBar;
 
 
     private final String SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN = "SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN";
@@ -117,6 +118,7 @@ public class MainFragment extends Fragment {
      */
     private void referScreenObjects() {
 
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.FragmentMainMoviesProgressBar);
         mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
     }
 
@@ -179,6 +181,13 @@ public class MainFragment extends Fragment {
             mAsyncTaskRequest = new AsyncTaskRequest() {
 
                 @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
                 protected void onPostExecute(String response) {
                     super.onPostExecute(response);
 
@@ -205,7 +214,10 @@ public class MainFragment extends Fragment {
                         }
 
                     } catch (JSONException e) {
-                        Log.e(Utilities.getMethodName(), e.toString());
+                        Log.e(Utils.getMethodName(), e.toString());
+                    }
+                    finally {
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 }
 
@@ -215,7 +227,7 @@ public class MainFragment extends Fragment {
             mAsyncTaskRequest.execute(url);
 
         }catch (MalformedURLException e){
-            Log.e(Utilities.getMethodName(), e.toString());
+            Log.e(Utils.getMethodName(), e.toString());
         }
     }
 

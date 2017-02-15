@@ -3,7 +3,7 @@ package com.fabiofilho.popmovies.Objects.Connections;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fabiofilho.popmovies.Objects.Utilities;
+import com.fabiofilho.popmovies.Objects.Utils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +27,6 @@ public class AsyncTaskRequest extends AsyncTask<URL, Void, String> {
     }
 
     public void onNetworkUtilsGetsIOException(IOException e){
-        Log.e(Utilities.getMethodName(), e.getMessage());
+        Log.e(Utils.getMethodName(), e.getMessage());
     }
 }
