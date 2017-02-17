@@ -13,9 +13,6 @@ import com.fabiofilho.popmovies.R;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_KEY = "com.fabiofilho.popmovies.Activities.MovieDetailsActivity.EXTRA_KEY";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

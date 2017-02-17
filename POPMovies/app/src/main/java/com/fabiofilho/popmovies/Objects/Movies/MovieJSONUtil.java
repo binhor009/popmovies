@@ -13,7 +13,7 @@ import java.util.List;
  * Created by dialam on 25/01/17.
  */
 
-public class MovieJSON {
+public class MovieJSONUtil {
 
     private static final String RESULTS_FIELD      = "results";
     private static final String TITLE_FIELD        = "title";

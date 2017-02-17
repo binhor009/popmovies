@@ -25,9 +25,13 @@
     <string name="dialog_message_failed_load_the_content_try_again" translatable="true">Failed to load content. Do you want to try again?</string>
     <!-- End of Dialogs -->
 
-    <!-- Movie details -->
+    <!-- Main Fragment -->
+    <string name="fragment_main_button_try_again" translatable="true">Try again</string>
+    <!-- End of Main Fragment -->
+
+    <!-- Movie details Fragment -->
     <string name="fragment_movie_details_button_favorite_marker" translatable="true">Mark as Favorite</string>
     <string name="fragment_movie_details_text_view_subtitle_trails" translatable="true">Trailers</string>
-    <!-- End of Movie details -->
+    <!-- End of Movie details Fragment -->
 
 </resources>

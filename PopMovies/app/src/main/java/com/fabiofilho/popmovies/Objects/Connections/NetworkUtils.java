@@ -1,5 +1,8 @@
 package com.fabiofilho.popmovies.Objects.Connections;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.fabiofilho.popmovies.BuildConfig;
@@ -18,6 +21,21 @@ import java.util.Scanner;
 public class NetworkUtils {
 
     private static final String PARAMETER_API_KEY = "api_key";
+
+    /**
+     * Checks if the internet is available.
+     * @param context The activity context which calls this method.
+     * @return the state of internet.
+     */
+
+    public static boolean isNetworkAvailable(Context context) {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 
     public static URL buildURL(String url, boolean appendsApiKey) throws MalformedURLException{

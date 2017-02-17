@@ -15,8 +15,6 @@ import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.R;
 import com.squareup.picasso.Picasso;
 
-import static com.fabiofilho.popmovies.Activities.MovieDetailsActivity.EXTRA_KEY;
-
 /**
  * Created by dialam on 02/02/17.
  */
@@ -84,7 +82,7 @@ public class MovieDetailsFragment extends Fragment {
     private void loadMovie() {
 
         // Loads the movie from the caller activity.
-        mMovieChosen = (Movie) getActivity().getIntent().getSerializableExtra(EXTRA_KEY);
+        mMovieChosen = (Movie) getActivity().getIntent().getSerializableExtra(Movie.PARCELABLE_KEY);
 
         //Loads the post image using Picasso API.
         Picasso.with(mRootView.getContext()).load(mMovieChosen.getPosterPath()).into(mImageView);
@@ -95,6 +93,9 @@ public class MovieDetailsFragment extends Fragment {
         mTextViewMovieDuration.setVisibility(View.GONE);
         mTextViewMovieRating.setText(String.valueOf(mMovieChosen.getVotesAverage()));
         mTextViewMovieDescription.setText(String.valueOf(mMovieChosen.getOverview()));
+
+        // Sets temporally the button bellow as invisible.
+        mButtonFavoriteMarker.setVisibility(View.INVISIBLE);
     }
 
 }

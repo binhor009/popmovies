@@ -11,17 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.fabiofilho.popmovies.Activities.MovieDetailsActivity;
 import com.fabiofilho.popmovies.Objects.Connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.Objects.Connections.NetworkUtils;
 import com.fabiofilho.popmovies.Objects.Dialogs.MovieOrderDialog;
-import com.fabiofilho.popmovies.Objects.Dialogs.SimpleDialog;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.Objects.Movies.MovieAdapter;
-import com.fabiofilho.popmovies.Objects.Movies.MovieJSON;
+import com.fabiofilho.popmovies.Objects.Movies.MovieJSONUtil;
 import com.fabiofilho.popmovies.Objects.Utils;
 import com.fabiofilho.popmovies.R;
 
@@ -31,7 +32,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements View.OnClickListener{
+
+    public final String SAVED_INSTANCE_KEY_MOVIE_ORDER = "SAVED_INSTANCE_KEY_MOVIE_ORDER";
 
     private View mRootView;
     private GridView mGridView;
@@ -39,8 +42,8 @@ public class MainFragment extends Fragment {
     private int mIndexMovieOrderChosen = 0;
     private ProgressBar mProgressBar;
 
-
-    private final String SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN = "SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN";
+    private LinearLayout mLinearLayoutNoInternetWarning;
+    private Button mButtonNoInternetTryAgain;
 
     public MainFragment() {
 
@@ -85,7 +88,7 @@ public class MainFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
 
         // Saves the current movie order.
-        outState.putInt(SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN, mIndexMovieOrderChosen);
+        outState.putInt(SAVED_INSTANCE_KEY_MOVIE_ORDER, mIndexMovieOrderChosen);
 
         super.onSaveInstanceState(outState);
     }
@@ -99,7 +102,7 @@ public class MainFragment extends Fragment {
         if(savedInstanceState != null){
 
             // Loads the movie order.
-            mIndexMovieOrderChosen = savedInstanceState.getInt(SAVED_INSTANCE_KEY_MOVIE_ORDER_CHOSEN);
+            mIndexMovieOrderChosen = savedInstanceState.getInt(SAVED_INSTANCE_KEY_MOVIE_ORDER);
         }
 
     }
@@ -109,7 +112,7 @@ public class MainFragment extends Fragment {
      */
     private void loadObjects() {
 
-        setGridViewListeners();
+        setObjectsListeners();
         updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
     }
 
@@ -120,19 +123,33 @@ public class MainFragment extends Fragment {
 
         mProgressBar = (ProgressBar) mRootView.findViewById(R.id.FragmentMainMoviesProgressBar);
         mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
+
+        mLinearLayoutNoInternetWarning = (LinearLayout) mRootView.findViewById(R.id.FragmentMainMoviesNoInternetWarningLinearLayout);
+        mButtonNoInternetTryAgain = (Button) mRootView.findViewById(R.id.FragmentMainMoviesNoInternetTryAgainButton);
     }
 
     /**
-     * Defines all grid view events.
+     * Defines all objects events.
      */
-    private void setGridViewListeners(){
+    private void setObjectsListeners(){
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 openMovieDetails(position);
             }
         });
+
+        /*mButtonNoInternetTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(Utils.getMethodName(), "CLICKED");
+                // Tries to update the adapter if the user wants.
+                updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
+            }
+        });*/
+
     }
 
 
@@ -148,7 +165,7 @@ public class MainFragment extends Fragment {
 
         // Creates an intent with a Movie instance as parameter.
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
-        intent.putExtra(MovieDetailsActivity.EXTRA_KEY, movie);
+        intent.putExtra(Movie.PARCELABLE_KEY, movie);
 
         startActivity(intent);
     }
@@ -177,6 +194,14 @@ public class MainFragment extends Fragment {
     private void updateMoviesAdapter(String movieOrder) {
 
         try {
+            // Checks for internet connection.
+            /*if (NetworkUtils.isNetworkAvailable(mRootView.getContext())){
+                setVisibilityNoInternetWarning(false);
+            }else{
+                setVisibilityNoInternetWarning(true);
+                return;
+            }*/
+
             URL url = NetworkUtils.buildURL(Movie.MOVIES_URL + movieOrder, true);
             mAsyncTaskRequest = new AsyncTaskRequest() {
 
@@ -200,7 +225,7 @@ public class MainFragment extends Fragment {
                             if (response != null) {
 
                                 ArrayList<Movie> movieList;
-                                movieList = (ArrayList<Movie>) MovieJSON.createMovieListByJSON(response);
+                                movieList = (ArrayList<Movie>) MovieJSONUtil.createMovieListByJSON(response);
 
                                 mGridView.setAdapter(
                                         new MovieAdapter(
@@ -209,7 +234,7 @@ public class MainFragment extends Fragment {
                                         )
                                 );
                             }else{
-                                askToUserTryGetContentAgain();
+                                setVisibilityNoInternetWarning(true);
                             }
                         }
 
@@ -232,26 +257,26 @@ public class MainFragment extends Fragment {
     }
 
     /**
-     *  Ask if the user wants try to get the content again.
+     * Sets the visibility of the layout that warns the user when there isn't a internet connection.
+     * @param value objects status visibility.
      */
-    private void askToUserTryGetContentAgain() {
+    private void setVisibilityNoInternetWarning(boolean value){
 
-        SimpleDialog simpleDialog = new SimpleDialog();
-        simpleDialog.onCreateDialog(getActivity(), R.string.dialog_message_failed_load_the_content_try_again, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        if(value){
+            // Sets the objects visible when there isn't internet connection.
+            mLinearLayoutNoInternetWarning.setVisibility(View.VISIBLE);
 
-                // Tries to update the adapter if the user wants.
-                updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
-            }
-        }, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                //Finalizes the activity if the user doesn't want.
-                getActivity().finish();
-            }
-        }).show();
+        }else {
+            // Sets the objects invisible when there is internet connection.
+            mLinearLayoutNoInternetWarning.setVisibility(View.GONE);
+        }
     }
 
+    @Override
+    public void onClick(View view) {
+
+        if( view.getId() == R.id.FragmentMainMoviesNoInternetTryAgainButton ){
+            Log.e(Utils.getMethodName(), "CLICKED");
+        }
+    }
 }
