@@ -52,11 +52,11 @@ public class MovieJSONUtil {
 
                 Movie movie = new Movie(
                         index,
-                        jsonObject.getString(TITLE_FIELD),
-                        jsonObject.getString(RELEASE_DATE_FIELD),
-                        jsonObject.getDouble(VOTE_AVERAGE_FIELD),
-                        jsonObject.getString(OVERVIEW_FIELD),
-                        jsonObject.getString(POSTER_PATH_FIELD)
+                        jsonObject.optString(TITLE_FIELD),
+                        jsonObject.optString(RELEASE_DATE_FIELD),
+                        jsonObject.optDouble(VOTE_AVERAGE_FIELD),
+                        jsonObject.optString(OVERVIEW_FIELD),
+                        jsonObject.optString(POSTER_PATH_FIELD)
                 );
 
                 // Adds inside the movie list the transformed json object.

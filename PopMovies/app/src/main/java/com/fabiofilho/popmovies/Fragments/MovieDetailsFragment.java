@@ -82,7 +82,7 @@ public class MovieDetailsFragment extends Fragment {
     private void loadMovie() {
 
         // Loads the movie from the caller activity.
-        mMovieChosen = (Movie) getActivity().getIntent().getSerializableExtra(Movie.PARCELABLE_KEY);
+        mMovieChosen = getActivity().getIntent().getParcelableExtra(Movie.PARCELABLE_KEY);
 
         //Loads the post image using Picasso API.
         Picasso.with(mRootView.getContext()).load(mMovieChosen.getPosterPath()).into(mImageView);

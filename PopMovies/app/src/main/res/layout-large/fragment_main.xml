@@ -12,29 +12,6 @@
     tools:context="com.fabiofilho.popmovies.Fragments.MainFragment"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
-        android:id="@+id/FragmentMainMoviesNoInternetWarningLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="@string/dialog_message_failed_load_the_content_try_again"
-            android:paddingBottom="10dp"
-            android:textColor="#FFF"/>
-
-        <Button
-            android:id="@+id/FragmentMainMoviesNoInternetTryAgainButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="@string/fragment_main_button_try_again"/>
-
-    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/FragmentMainMoviesProgressBar"
@@ -53,5 +30,32 @@
         android:numColumns="auto_fit"
         android:verticalSpacing="3dp"
         android:columnWidth="200dp"/>
+
+    <LinearLayout
+        android:id="@+id/FragmentMainMoviesNoInternetWarningLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorAccent"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fragment_main_text_view_no_internet_connection"
+            android:textColor="#FFF"
+            android:textAlignment="center"/>
+
+        <Button
+            android:id="@+id/FragmentMainMoviesNoInternetTryAgainButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#FFF"
+            android:background="@color/colorAccent"
+            android:text="@string/fragment_main_button_try_again"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

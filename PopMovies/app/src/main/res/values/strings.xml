@@ -26,6 +26,7 @@
     <!-- End of Dialogs -->
 
     <!-- Main Fragment -->
+    <string name="fragment_main_text_view_no_internet_connection" translatable="true">No internet connection</string>
     <string name="fragment_main_button_try_again" translatable="true">Try again</string>
     <!-- End of Main Fragment -->
 

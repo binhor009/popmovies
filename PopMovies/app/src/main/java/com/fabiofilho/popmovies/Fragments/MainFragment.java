@@ -20,6 +20,7 @@ import com.fabiofilho.popmovies.Activities.MovieDetailsActivity;
 import com.fabiofilho.popmovies.Objects.Connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.Objects.Connections.NetworkUtils;
 import com.fabiofilho.popmovies.Objects.Dialogs.MovieOrderDialog;
+import com.fabiofilho.popmovies.Objects.Movies.AsyncTaskRequestMovies;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.Objects.Movies.MovieAdapter;
 import com.fabiofilho.popmovies.Objects.Movies.MovieJSONUtil;
@@ -32,7 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainFragment extends Fragment implements View.OnClickListener{
+public class MainFragment extends Fragment {
 
     public final String SAVED_INSTANCE_KEY_MOVIE_ORDER = "SAVED_INSTANCE_KEY_MOVIE_ORDER";
 
@@ -104,7 +105,6 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             // Loads the movie order.
             mIndexMovieOrderChosen = savedInstanceState.getInt(SAVED_INSTANCE_KEY_MOVIE_ORDER);
         }
-
     }
 
     /**
@@ -113,7 +113,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
     private void loadObjects() {
 
         setObjectsListeners();
-        updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
+        updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[mIndexMovieOrderChosen]);
     }
 
     /**
@@ -141,14 +141,13 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        /*mButtonNoInternetTryAgain.setOnClickListener(new View.OnClickListener() {
+        mButtonNoInternetTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e(Utils.getMethodName(), "CLICKED");
                 // Tries to update the adapter if the user wants.
-                updateMoviesAdapter(Movie.MOVIE_ORDER[mIndexMovieOrderChosen]);
+                updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[mIndexMovieOrderChosen]);
             }
-        });*/
+        });
 
     }
 
@@ -182,7 +181,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
             public void onClick(DialogInterface dialog, int which) {
 
                 // Updates the movies adapter if the user has chosen a different order.
-                updateMoviesAdapter(Movie.MOVIE_ORDER[which]);
+                updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[which]);
             }
         }).show();
     }
@@ -195,21 +194,22 @@ public class MainFragment extends Fragment implements View.OnClickListener{
 
         try {
             // Checks for internet connection.
-            /*if (NetworkUtils.isNetworkAvailable(mRootView.getContext())){
-                setVisibilityNoInternetWarning(false);
+            if (NetworkUtils.isNetworkAvailable(getActivity().getApplicationContext())){
+                setNoInternetWarningMode(false);
             }else{
-                setVisibilityNoInternetWarning(true);
+                setNoInternetWarningMode(true);
                 return;
-            }*/
+            }
 
-            URL url = NetworkUtils.buildURL(Movie.MOVIES_URL + movieOrder, true);
-            mAsyncTaskRequest = new AsyncTaskRequest() {
+            URL url = NetworkUtils.buildURL(AsyncTaskRequestMovies.MOVIES_URL + movieOrder, true);
+            mAsyncTaskRequest = new AsyncTaskRequestMovies() {
 
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
 
                     mProgressBar.setVisibility(View.VISIBLE);
+                    mGridView.setAdapter(null);
                 }
 
                 @Override
@@ -234,7 +234,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                                         )
                                 );
                             }else{
-                                setVisibilityNoInternetWarning(true);
+                                setNoInternetWarningMode(true);
                             }
                         }
 
@@ -260,23 +260,18 @@ public class MainFragment extends Fragment implements View.OnClickListener{
      * Sets the visibility of the layout that warns the user when there isn't a internet connection.
      * @param value objects status visibility.
      */
-    private void setVisibilityNoInternetWarning(boolean value){
+    private void setNoInternetWarningMode(boolean value){
 
         if(value){
             // Sets the objects visible when there isn't internet connection.
             mLinearLayoutNoInternetWarning.setVisibility(View.VISIBLE);
+            mGridView.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
 
         }else {
             // Sets the objects invisible when there is internet connection.
             mLinearLayoutNoInternetWarning.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        if( view.getId() == R.id.FragmentMainMoviesNoInternetTryAgainButton ){
-            Log.e(Utils.getMethodName(), "CLICKED");
+            mGridView.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -27,6 +27,7 @@ public class AsyncTaskRequest extends AsyncTask<URL, Void, String> {
     }
 
     public void onNetworkUtilsGetsIOException(IOException e){
+
         Log.e(Utils.getMethodName(), e.getMessage());
     }
 }
