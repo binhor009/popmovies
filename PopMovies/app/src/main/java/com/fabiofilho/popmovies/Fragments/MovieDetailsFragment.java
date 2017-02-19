@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.R;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by dialam on 02/02/17.
@@ -85,7 +85,8 @@ public class MovieDetailsFragment extends Fragment {
         mMovieChosen = getActivity().getIntent().getParcelableExtra(Movie.PARCELABLE_KEY);
 
         //Loads the post image using Picasso API.
-        Picasso.with(mRootView.getContext()).load(mMovieChosen.getPosterPath()).into(mImageView);
+        Glide.with(mRootView.getContext())
+                .load(mMovieChosen.getPosterPath()).into(mImageView);
 
         // Loads the content.
         mTextViewMovieTitle.setText(mMovieChosen.getTitle());
