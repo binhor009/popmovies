@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.R;
+import com.squareup.picasso.Picasso;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by dialam on 02/02/17.
@@ -38,6 +40,7 @@ public class MovieDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mRootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        ButterKnife.bind(this, mRootView);
 
         // Refers the objects to class variables.
         referScreenObjects();
@@ -85,7 +88,7 @@ public class MovieDetailsFragment extends Fragment {
         mMovieChosen = getActivity().getIntent().getParcelableExtra(Movie.PARCELABLE_KEY);
 
         //Loads the post image using Picasso API.
-        Glide.with(mRootView.getContext())
+        Picasso.with(mRootView.getContext())
                 .load(mMovieChosen.getPosterPath()).into(mImageView);
 
         // Loads the content.

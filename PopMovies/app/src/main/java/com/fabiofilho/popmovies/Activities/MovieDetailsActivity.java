@@ -7,16 +7,23 @@ import android.view.Menu;
 
 import com.fabiofilho.popmovies.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by dialam on 30/01/17.
  */
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
+    @BindView(R.id.movie_details_toolbar) Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        ButterKnife.bind(this);
 
         //Loads the toolbar object.
         loadToolbar();
@@ -25,8 +32,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void loadToolbar(){
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.movie_details_toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
         // Actives the back arrow if there is a "Support Action Bar".
         if(getSupportActionBar()!=null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.fabiofilho.popmovies.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -63,7 +63,7 @@ public class MovieAdapter extends BaseAdapter {
             movieHolder = (MovieHolder) view.getTag();
         }
 
-        Glide.with(view.getContext())
+        Picasso.with(view.getContext())
                 .load(mMovieList.get(position).getPosterPath())
                 .into(movieHolder.imageView);
 

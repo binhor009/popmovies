@@ -33,18 +33,29 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainFragment extends Fragment {
 
     public final String SAVED_INSTANCE_KEY_MOVIE_ORDER = "SAVED_INSTANCE_KEY_MOVIE_ORDER";
 
     private View mRootView;
-    private GridView mGridView;
     private AsyncTaskRequest mAsyncTaskRequest;
     private int mIndexMovieOrderChosen = 0;
-    private ProgressBar mProgressBar;
 
-    private LinearLayout mLinearLayoutNoInternetWarning;
-    private Button mButtonNoInternetTryAgain;
+    @BindView(R.id.FragmentMainMoviesProgressBar)
+    public ProgressBar mProgressBar;
+
+    @BindView(R.id.FragmentMainMoviesNoInternetWarningLinearLayout)
+    public LinearLayout mLinearLayoutNoInternetWarning;
+
+    @BindView(R.id.FragmentMainMoviesGridView)
+    public GridView mGridView;
+
+    @BindView(R.id.FragmentMainMoviesNoInternetTryAgainButton)
+    public Button mButtonNoInternetTryAgain;
+
 
     public MainFragment() {
 
@@ -72,12 +83,10 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
+        ButterKnife.bind(this, mRootView);
 
         // Loads the saved variables.
         loadSavedInstanceState(savedInstanceState);
-
-        // Refers the objects to class variables.
-        referScreenObjects();
 
         // Setting the default values for them.
         loadObjects();
@@ -114,18 +123,6 @@ public class MainFragment extends Fragment {
 
         setObjectsListeners();
         updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[mIndexMovieOrderChosen]);
-    }
-
-    /**
-     * Refers the objects from screen.
-     */
-    private void referScreenObjects() {
-
-        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.FragmentMainMoviesProgressBar);
-        mGridView = (GridView) mRootView.findViewById(R.id.FragmentMainMoviesGridView);
-
-        mLinearLayoutNoInternetWarning = (LinearLayout) mRootView.findViewById(R.id.FragmentMainMoviesNoInternetWarningLinearLayout);
-        mButtonNoInternetTryAgain = (Button) mRootView.findViewById(R.id.FragmentMainMoviesNoInternetTryAgainButton);
     }
 
     /**
