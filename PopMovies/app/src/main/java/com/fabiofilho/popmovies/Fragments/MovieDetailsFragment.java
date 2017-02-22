@@ -15,6 +15,8 @@ import com.fabiofilho.popmovies.Objects.Movies.Movie;
 import com.fabiofilho.popmovies.R;
 import com.squareup.picasso.Picasso;
 
+import org.parceler.Parcels;
+
 import butterknife.ButterKnife;
 
 /**
@@ -85,7 +87,7 @@ public class MovieDetailsFragment extends Fragment {
     private void loadMovie() {
 
         // Loads the movie from the caller activity.
-        mMovieChosen = getActivity().getIntent().getParcelableExtra(Movie.PARCELABLE_KEY);
+        mMovieChosen = (Movie) Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Movie.PARCELABLE_KEY));
 
         //Loads the post image using Picasso API.
         Picasso.with(mRootView.getContext())

@@ -28,6 +28,7 @@ import com.fabiofilho.popmovies.Objects.Utils;
 import com.fabiofilho.popmovies.R;
 
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -161,11 +162,10 @@ public class MainFragment extends Fragment {
 
         // Creates an intent with a Movie instance as parameter.
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
-        intent.putExtra(Movie.PARCELABLE_KEY, movie);
+        intent.putExtra(Movie.PARCELABLE_KEY, Parcels.wrap(movie));
 
         startActivity(intent);
     }
-
 
     /**
      * Create an instance of MovieOrderDialog class and shows it to the user.
