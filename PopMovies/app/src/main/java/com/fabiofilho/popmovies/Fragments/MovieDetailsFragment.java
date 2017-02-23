@@ -3,6 +3,7 @@ package com.fabiofilho.popmovies.Fragments;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,13 +12,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fabiofilho.popmovies.BuildConfig;
 import com.fabiofilho.popmovies.Objects.Movies.Movie;
+import com.fabiofilho.popmovies.Objects.Movies.MovieAPI;
+import com.fabiofilho.popmovies.Objects.Movies.gson.Page;
+import com.fabiofilho.popmovies.Objects.Utils;
 import com.fabiofilho.popmovies.R;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by dialam on 02/02/17.
@@ -48,9 +58,44 @@ public class MovieDetailsFragment extends Fragment {
         referScreenObjects();
 
         // Loads the movie chosen.
-        loadMovie();
+        //loadMovie();
+
+        test();
 
         return mRootView;
+    }
+
+    private void test() {
+
+
+        final String BASE_URL = "https://api.themoviedb.org/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        MovieAPI movieAPI = retrofit.create(MovieAPI.class);
+
+        Call<Page> call = movieAPI.getMoviePage("popular", BuildConfig.THE_MOVIE_DB_API_KEY);
+
+        call.enqueue(new Callback<Page>() {
+            @Override
+            public void onResponse(Call<Page> call, Response<Page> response) {
+
+                Page page = response.body();
+                Log.i(Utils.getMethodName(), "body: "+response.body());
+                Log.i(Utils.getMethodName(), "size: "+ page.getResults().size());
+                Log.i(Utils.getMethodName(), page.getResults().get(0).getTitle());
+            }
+
+            @Override
+            public void onFailure(Call<Page> call, Throwable t) {
+
+                Log.i(Utils.getMethodName(), "error: "+t.toString());
+                t.printStackTrace();
+            }
+        });
+
     }
 
 

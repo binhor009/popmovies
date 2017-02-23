@@ -146,21 +146,19 @@ public class MainFragment extends Fragment {
                 updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[mIndexMovieOrderChosen]);
             }
         });
-
     }
 
-
     /**
-     * Opens the movie details activity and sends an instance of Movie class
+     * Opens the movie details activity and sends an instance of Result class
      * chosen by user.
      * @param position
      */
     private void openMovieDetails(int position){
 
-        // Casts the Movie instance by the position to send it through intent to MovieDetailsActivity.
+        // Casts the Result instance by the position to send it through intent to MovieDetailsActivity.
         Movie movie = ((Movie) mGridView.getAdapter().getItem(position));
 
-        // Creates an intent with a Movie instance as parameter.
+        // Creates an intent with a Result instance as parameter.
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
         intent.putExtra(Movie.PARCELABLE_KEY, Parcels.wrap(movie));
 
