@@ -1,16 +1,27 @@
 package com.fabiofilho.popmovies.objects.movies.gson;
 
+import android.content.Context;
+import android.text.format.DateFormat;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+import java.util.Calendar;
 import java.util.List;
+
+import static com.fabiofilho.popmovies.objects.movies.MoviesRequests.MOVIES_IMAGE_URL;
 
 /**
  * Created by fabiofilho on 2/23/17.
  */
 
+@Parcel
+public class Movie {
 
-public class Result {
+    public static final String PARCELABLE_KEY = "com.fabiofilho.popmovies.Objects.Movies.PARCELABLE_KEY";
+    private static final String IMAGE_SIZE = "w342";
 
     @SerializedName("poster_path")
     @Expose
@@ -56,7 +67,7 @@ public class Result {
     private Double voteAverage;
 
     public String getPosterPath() {
-        return posterPath;
+        return MOVIES_IMAGE_URL + IMAGE_SIZE + posterPath;
     }
 
     public void setPosterPath(String posterPath) {
@@ -143,8 +154,8 @@ public class Result {
         this.popularity = popularity;
     }
 
-    public Integer getVoteCount() {
-        return voteCount;
+    public String getVoteCount() {
+        return String.valueOf(voteAverage)+"/10";
     }
 
     public void setVoteCount(Integer voteCount) {
@@ -167,5 +178,20 @@ public class Result {
         this.voteAverage = voteAverage;
     }
 
+    /**
+     * Formats the releaseDate correctly.
+     * @param context
+     * @return releaseDate
+     */
+    public String getReleaseDate(Context context){
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(
+                Integer.parseInt(releaseDate.split("-")[0]),
+                Integer.parseInt(releaseDate.split("-")[1]),
+                Integer.parseInt(releaseDate.split("-")[2])
+        );
+
+        return DateFormat.getMediumDateFormat(context).format(calendar.getTime());
+    }
 }

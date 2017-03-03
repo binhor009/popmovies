@@ -9,9 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.fabiofilho.popmovies.R;
+import com.fabiofilho.popmovies.objects.movies.gson.Movie;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dialam on 21/01/17.
@@ -19,10 +20,10 @@ import java.util.ArrayList;
 
 public class MovieAdapter extends BaseAdapter {
     private Context mContext;
-    private ArrayList<Movie> mMovieList;
+    private List<Movie> mMovieList;
     private LayoutInflater mLayoutInflater;
 
-    public MovieAdapter(Context context, ArrayList<Movie> movieList) {
+    public MovieAdapter(Context context, List<Movie> movieList) {
         mContext = context;
         mMovieList = movieList;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -65,6 +66,7 @@ public class MovieAdapter extends BaseAdapter {
 
         Picasso.with(view.getContext())
                 .load(mMovieList.get(position).getPosterPath())
+                .placeholder(R.mipmap.ic_movie_default)
                 .into(movieHolder.imageView);
 
         return view;

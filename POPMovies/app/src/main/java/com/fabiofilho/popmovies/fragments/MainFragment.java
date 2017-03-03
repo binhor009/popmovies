@@ -16,26 +16,30 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.fabiofilho.popmovies.BuildConfig;
+import com.fabiofilho.popmovies.R;
 import com.fabiofilho.popmovies.activities.MovieDetailsActivity;
+import com.fabiofilho.popmovies.objects.Utils;
 import com.fabiofilho.popmovies.objects.connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.objects.connections.NetworkUtils;
 import com.fabiofilho.popmovies.objects.dialogs.MovieOrderDialog;
-import com.fabiofilho.popmovies.objects.movies.AsyncTaskRequestMovies;
-import com.fabiofilho.popmovies.objects.movies.Movie;
+import com.fabiofilho.popmovies.objects.movies.MovieAPI;
 import com.fabiofilho.popmovies.objects.movies.MovieAdapter;
-import com.fabiofilho.popmovies.objects.movies.MovieJSONUtil;
-import com.fabiofilho.popmovies.objects.Utils;
-import com.fabiofilho.popmovies.R;
+import com.fabiofilho.popmovies.objects.movies.MoviesRequests;
+import com.fabiofilho.popmovies.objects.movies.gson.Movie;
+import com.fabiofilho.popmovies.objects.movies.gson.Page;
 
-import org.json.JSONException;
 import org.parceler.Parcels;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment {
 
@@ -123,7 +127,7 @@ public class MainFragment extends Fragment {
     private void loadObjects() {
 
         setObjectsListeners();
-        updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[mIndexMovieOrderChosen]);
+        updateMoviesAdapter(MoviesRequests.MOVIE_ORDER[mIndexMovieOrderChosen]);
     }
 
     /**
@@ -143,22 +147,22 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Tries to update the adapter if the user wants.
-                updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[mIndexMovieOrderChosen]);
+                updateMoviesAdapter(MoviesRequests.MOVIE_ORDER[mIndexMovieOrderChosen]);
             }
         });
     }
 
     /**
-     * Opens the movie details activity and sends an instance of Result class
+     * Opens the movie details activity and sends an instance of Movie class
      * chosen by user.
      * @param position
      */
     private void openMovieDetails(int position){
 
-        // Casts the Result instance by the position to send it through intent to MovieDetailsActivity.
+        // Casts the Movie instance by the position to send it through intent to MovieDetailsActivity.
         Movie movie = ((Movie) mGridView.getAdapter().getItem(position));
 
-        // Creates an intent with a Result instance as parameter.
+        // Creates an intent with a Movie instance as parameter.
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
         intent.putExtra(Movie.PARCELABLE_KEY, Parcels.wrap(movie));
 
@@ -176,7 +180,7 @@ public class MainFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 // Updates the movies adapter if the user has chosen a different order.
-                updateMoviesAdapter(AsyncTaskRequestMovies.MOVIE_ORDER[which]);
+                updateMoviesAdapter(MoviesRequests.MOVIE_ORDER[which]);
             }
         }).show();
     }
@@ -185,7 +189,7 @@ public class MainFragment extends Fragment {
      *  Download the movies content and update the MoviesAdapter with this data.
      * @param movieOrder
      */
-    private void updateMoviesAdapter(String movieOrder) {
+    private void updateMoviesAdapter(final String movieOrder) {
 
         try {
             // Checks for internet connection.
@@ -196,20 +200,25 @@ public class MainFragment extends Fragment {
                 return;
             }
 
-            URL url = NetworkUtils.buildURL(AsyncTaskRequestMovies.MOVIES_URL + movieOrder, true);
-            mAsyncTaskRequest = new AsyncTaskRequestMovies() {
+            mGridView.setAdapter(null);
+
+            // Defines the Retrofit instance.
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(MoviesRequests.MOVIES_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            final MovieAPI movieAPI = retrofit.create(MovieAPI.class);
+
+            Call<Page> call = movieAPI.getMoviePage(
+                    movieOrder,
+                    BuildConfig.THE_MOVIE_DB_API_KEY
+            );
+
+            call.enqueue(new Callback<Page>() {
 
                 @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mGridView.setAdapter(null);
-                }
-
-                @Override
-                protected void onPostExecute(String response) {
-                    super.onPostExecute(response);
+                public void onResponse(Call<Page> call, Response<Page> response) {
 
                     try {
                         // Checks if the fragment is attached to activity.
@@ -219,8 +228,8 @@ public class MainFragment extends Fragment {
                             // the data on the grid view.
                             if (response != null) {
 
-                                ArrayList<Movie> movieList;
-                                movieList = (ArrayList<Movie>) MovieJSONUtil.createMovieListByJSON(response);
+                                List<Movie> movieList;
+                                movieList = response.body().getMovies();
 
                                 mGridView.setAdapter(
                                         new MovieAdapter(
@@ -233,21 +242,25 @@ public class MainFragment extends Fragment {
                             }
                         }
 
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         Log.e(Utils.getMethodName(), e.toString());
+                        e.printStackTrace();
                     }
                     finally {
                         mProgressBar.setVisibility(View.GONE);
                     }
                 }
 
-            };
+                @Override
+                public void onFailure(Call<Page> call, Throwable t) {
+                    Log.i(Utils.getMethodName(), t.toString());
+                }
+            });
 
-            // Initialize the parallel process to load content.
-            mAsyncTaskRequest.execute(url);
 
-        }catch (MalformedURLException e){
+        }catch (Exception e){
             Log.e(Utils.getMethodName(), e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -267,6 +280,7 @@ public class MainFragment extends Fragment {
             // Sets the objects invisible when there is internet connection.
             mLinearLayoutNoInternetWarning.setVisibility(View.GONE);
             mGridView.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 }
