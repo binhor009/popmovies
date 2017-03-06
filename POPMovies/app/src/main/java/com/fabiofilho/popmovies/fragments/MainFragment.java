@@ -20,7 +20,6 @@ import com.fabiofilho.popmovies.BuildConfig;
 import com.fabiofilho.popmovies.R;
 import com.fabiofilho.popmovies.activities.MovieDetailsActivity;
 import com.fabiofilho.popmovies.objects.Utils;
-import com.fabiofilho.popmovies.objects.connections.AsyncTaskRequest;
 import com.fabiofilho.popmovies.objects.connections.NetworkUtils;
 import com.fabiofilho.popmovies.objects.dialogs.MovieOrderDialog;
 import com.fabiofilho.popmovies.objects.movies.MovieAPI;
@@ -46,7 +45,6 @@ public class MainFragment extends Fragment {
     public final String SAVED_INSTANCE_KEY_MOVIE_ORDER = "SAVED_INSTANCE_KEY_MOVIE_ORDER";
 
     private View mRootView;
-    private AsyncTaskRequest mAsyncTaskRequest;
     private int mIndexMovieOrderChosen = 0;
 
     @BindView(R.id.FragmentMainMoviesProgressBar)
