@@ -11,7 +11,7 @@ import org.parceler.Parcel;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.fabiofilho.popmovies.objects.movies.MoviesRequests.MOVIES_IMAGE_URL;
+import static com.fabiofilho.popmovies.objects.movies.MovieAPI.MOVIES_IMAGE_URL;
 
 /**
  * Created by fabiofilho on 2/23/17.

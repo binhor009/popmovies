@@ -24,7 +24,6 @@ import com.fabiofilho.popmovies.objects.connections.NetworkUtils;
 import com.fabiofilho.popmovies.objects.dialogs.MovieOrderDialog;
 import com.fabiofilho.popmovies.objects.movies.MovieAPI;
 import com.fabiofilho.popmovies.objects.movies.MovieAdapter;
-import com.fabiofilho.popmovies.objects.movies.MoviesRequests;
 import com.fabiofilho.popmovies.objects.movies.gson.Movie;
 import com.fabiofilho.popmovies.objects.movies.gson.Page;
 
@@ -40,7 +39,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements Callback<Page>{
 
     public final String SAVED_INSTANCE_KEY_MOVIE_ORDER = "SAVED_INSTANCE_KEY_MOVIE_ORDER";
 
@@ -125,7 +124,7 @@ public class MainFragment extends Fragment {
     private void loadObjects() {
 
         setObjectsListeners();
-        updateMoviesAdapter(MoviesRequests.MOVIE_ORDER[mIndexMovieOrderChosen]);
+        updateMoviesAdapter(MovieAPI.MOVIE_ORDER[mIndexMovieOrderChosen]);
     }
 
     /**
@@ -145,7 +144,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Tries to update the adapter if the user wants.
-                updateMoviesAdapter(MoviesRequests.MOVIE_ORDER[mIndexMovieOrderChosen]);
+                updateMoviesAdapter(MovieAPI.MOVIE_ORDER[mIndexMovieOrderChosen]);
             }
         });
     }
@@ -178,7 +177,7 @@ public class MainFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 // Updates the movies adapter if the user has chosen a different order.
-                updateMoviesAdapter(MoviesRequests.MOVIE_ORDER[which]);
+                updateMoviesAdapter(MovieAPI.MOVIE_ORDER[which]);
             }
         }).show();
     }
@@ -198,63 +197,27 @@ public class MainFragment extends Fragment {
                 return;
             }
 
+            //Clear grid's adapter.
             mGridView.setAdapter(null);
 
-            // Defines the Retrofit instance.
+            // Creates the Retrofit instance.
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(MoviesRequests.MOVIES_URL)
+                    .baseUrl(MovieAPI.MOVIES_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
+            // Binding the interface MovieAPI with the Retrofit API.
             final MovieAPI movieAPI = retrofit.create(MovieAPI.class);
 
+            // Creates the Call<Page> instance.
             Call<Page> call = movieAPI.getMoviePage(
                     movieOrder,
                     BuildConfig.THE_MOVIE_DB_API_KEY
             );
 
-            call.enqueue(new Callback<Page>() {
-
-                @Override
-                public void onResponse(Call<Page> call, Response<Page> response) {
-
-                    try {
-                        // Checks if the fragment is attached to activity.
-                        if (isAdded()) {
-
-                            // Checks if the response from http request is different of null to load
-                            // the data on the grid view.
-                            if (response != null) {
-
-                                List<Movie> movieList;
-                                movieList = response.body().getMovies();
-
-                                mGridView.setAdapter(
-                                        new MovieAdapter(
-                                                mRootView.getContext(),
-                                                movieList
-                                        )
-                                );
-                            }else{
-                                setNoInternetWarningMode(true);
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        Log.e(Utils.getMethodName(), e.toString());
-                        e.printStackTrace();
-                    }
-                    finally {
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Page> call, Throwable t) {
-                    Log.i(Utils.getMethodName(), t.toString());
-                }
-            });
-
+            // Binding onResponse and onFailure methods of this class to this object.
+            // Then, put a request in the queue.
+            call.enqueue(this);
 
         }catch (Exception e){
             Log.e(Utils.getMethodName(), e.toString());
@@ -280,5 +243,44 @@ public class MainFragment extends Fragment {
             mGridView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onResponse(Call<Page> call, Response<Page> response) {
+
+        try {
+            // Checks if the fragment is attached to activity.
+            if (isAdded()) {
+
+                // Checks if the response from http request is different of null to load
+                // the data on the grid view.
+                if (response != null) {
+
+                    List<Movie> movieList;
+                    movieList = response.body().getMovies();
+
+                    mGridView.setAdapter(
+                            new MovieAdapter(
+                                    mRootView.getContext(),
+                                    movieList
+                            )
+                    );
+                }else{
+                    setNoInternetWarningMode(true);
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(Utils.getMethodName(), e.toString());
+            e.printStackTrace();
+        }
+        finally {
+            mProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onFailure(Call<Page> call, Throwable t) {
+        Log.i(Utils.getMethodName(), t.toString());
     }
 }
