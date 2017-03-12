@@ -1,18 +1,20 @@
 package com.fabiofilho.popmovies.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -24,6 +26,7 @@ import com.fabiofilho.popmovies.objects.connections.NetworkUtils;
 import com.fabiofilho.popmovies.objects.dialogs.MovieOrderDialog;
 import com.fabiofilho.popmovies.objects.movies.MovieAPI;
 import com.fabiofilho.popmovies.objects.movies.MovieAdapter;
+import com.fabiofilho.popmovies.objects.movies.MovieAdapterOnClickHandler;
 import com.fabiofilho.popmovies.objects.movies.gson.Movie;
 import com.fabiofilho.popmovies.objects.movies.gson.Page;
 
@@ -39,7 +42,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainFragment extends Fragment implements Callback<Page>{
+public class MainFragment extends Fragment implements Callback<Page>, MovieAdapterOnClickHandler{
 
     public final String SAVED_INSTANCE_KEY_MOVIE_ORDER = "SAVED_INSTANCE_KEY_MOVIE_ORDER";
 
@@ -53,7 +56,7 @@ public class MainFragment extends Fragment implements Callback<Page>{
     public LinearLayout mLinearLayoutNoInternetWarning;
 
     @BindView(R.id.FragmentMainMoviesGridView)
-    public GridView mGridView;
+    public RecyclerView mRecyclerView;
 
     @BindView(R.id.FragmentMainMoviesNoInternetTryAgainButton)
     public Button mButtonNoInternetTryAgain;
@@ -123,7 +126,12 @@ public class MainFragment extends Fragment implements Callback<Page>{
      */
     private void loadObjects() {
 
+        prepareRecycleView();
+
         setObjectsListeners();
+
+        mIndexMovieOrderChosen = getMovieOrderPreference();
+
         updateMoviesAdapter(MovieAPI.MOVIE_ORDER[mIndexMovieOrderChosen]);
     }
 
@@ -131,14 +139,6 @@ public class MainFragment extends Fragment implements Callback<Page>{
      * Defines all objects events.
      */
     private void setObjectsListeners(){
-
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                openMovieDetails(position);
-            }
-        });
 
         mButtonNoInternetTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +157,7 @@ public class MainFragment extends Fragment implements Callback<Page>{
     private void openMovieDetails(int position){
 
         // Casts the Movie instance by the position to send it through intent to MovieDetailsActivity.
-        Movie movie = ((Movie) mGridView.getAdapter().getItem(position));
+        Movie movie = ((MovieAdapter) mRecyclerView.getAdapter()).getItem(position);
 
         // Creates an intent with a Movie instance as parameter.
         Intent intent = new Intent(mRootView.getContext(), MovieDetailsActivity.class);
@@ -176,10 +176,33 @@ public class MainFragment extends Fragment implements Callback<Page>{
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                // Saves the preferences gotten.
+                saveMovieOrderPreference(which);
+
                 // Updates the movies adapter if the user has chosen a different order.
                 updateMoviesAdapter(MovieAPI.MOVIE_ORDER[which]);
             }
-        }).show();
+        }, mIndexMovieOrderChosen).show();
+    }
+
+    private void saveMovieOrderPreference(int value) {
+
+        SharedPreferences sharedPreferences =
+                mRootView.getContext().getSharedPreferences(SAVED_INSTANCE_KEY_MOVIE_ORDER,
+                    Context.MODE_PRIVATE);
+
+        sharedPreferences.edit()
+                .putInt(SAVED_INSTANCE_KEY_MOVIE_ORDER, value)
+                .apply();
+    }
+
+    private int getMovieOrderPreference() {
+
+        SharedPreferences sharedPreferences =
+                mRootView.getContext().getSharedPreferences(SAVED_INSTANCE_KEY_MOVIE_ORDER,
+                        Context.MODE_PRIVATE);
+
+        return sharedPreferences.getInt(SAVED_INSTANCE_KEY_MOVIE_ORDER, 0);
     }
 
     /***
@@ -197,8 +220,9 @@ public class MainFragment extends Fragment implements Callback<Page>{
                 return;
             }
 
-            //Clear grid's adapter.
-            mGridView.setAdapter(null);
+            //Clear the adapter.
+            mRecyclerView.setAdapter(null);
+            mRecyclerView.getRecycledViewPool().clear();
 
             // Creates the Retrofit instance.
             Retrofit retrofit = new Retrofit.Builder()
@@ -221,8 +245,24 @@ public class MainFragment extends Fragment implements Callback<Page>{
 
         }catch (Exception e){
             Log.e(Utils.getMethodName(), e.toString());
-            e.printStackTrace();
+            setNoInternetWarningMode(true);
         }
+    }
+
+    private void prepareRecycleView() {
+
+        // Sets some Recycle view properties.
+        GridLayoutManager manager = new GridLayoutManager(
+                mRootView.getContext(),
+                Utils.calculateNumberOfColumns(mRootView.getContext())
+        );
+
+        mRecyclerView.setLayoutManager(null);
+
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.setAdapter(null);
     }
 
     /**
@@ -234,13 +274,13 @@ public class MainFragment extends Fragment implements Callback<Page>{
         if(value){
             // Sets the objects visible when there isn't internet connection.
             mLinearLayoutNoInternetWarning.setVisibility(View.VISIBLE);
-            mGridView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
 
         }else {
             // Sets the objects invisible when there is internet connection.
             mLinearLayoutNoInternetWarning.setVisibility(View.GONE);
-            mGridView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
@@ -259,12 +299,13 @@ public class MainFragment extends Fragment implements Callback<Page>{
                     List<Movie> movieList;
                     movieList = response.body().getMovies();
 
-                    mGridView.setAdapter(
-                            new MovieAdapter(
-                                    mRootView.getContext(),
-                                    movieList
-                            )
+                    MovieAdapter movieAdapter = new MovieAdapter(
+                            mRootView.getContext(),
+                            movieList, this
                     );
+
+                    mRecyclerView.setAdapter(movieAdapter);
+
                 }else{
                     setNoInternetWarningMode(true);
                 }
@@ -282,5 +323,11 @@ public class MainFragment extends Fragment implements Callback<Page>{
     @Override
     public void onFailure(Call<Page> call, Throwable t) {
         Log.i(Utils.getMethodName(), t.toString());
+        setNoInternetWarningMode(true);
+    }
+
+    @Override
+    public void onClickMovieItem(int position) {
+        openMovieDetails(position);
     }
 }

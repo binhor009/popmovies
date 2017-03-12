@@ -21,15 +21,13 @@
         android:layout_centerVertical="true"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"/>
 
-    <GridView
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/FragmentMainMoviesGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:horizontalSpacing="3dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="3dp"
-        android:columnWidth="200dp"/>
+        android:layout_margin="3dp"
+        android:clipToPadding="false"/>
 
     <LinearLayout
         android:id="@+id/FragmentMainMoviesNoInternetWarningLinearLayout"

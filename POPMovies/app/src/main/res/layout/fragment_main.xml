@@ -19,22 +19,19 @@
         android:layout_gravity="center"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"/>
 
-    <RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/FragmentMainMoviesGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:horizontalSpacing="3dp"
-        android:stretchMode="columnWidth"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="3dp"
-        android:columnWidth="120dp"/>
+        android:clipToPadding="false"/>
 
     <LinearLayout
         android:id="@+id/FragmentMainMoviesNoInternetWarningLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/colorAccent">
+        android:background="@color/colorAccent"
+        android:layout_gravity="bottom">
 
         <TextView
             android:layout_width="0dp"

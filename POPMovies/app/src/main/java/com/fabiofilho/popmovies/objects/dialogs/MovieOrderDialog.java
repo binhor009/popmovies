@@ -16,12 +16,17 @@ public class MovieOrderDialog extends DialogFragment{
 
     private static int sItemIndexChecked = 0, sOldItemIndexChecked = 0;
 
-    public Dialog onCreateDialog(Activity activity, final DialogInterface.OnClickListener positiveOnClickListener) {
+    public Dialog onCreateDialog(Activity activity,
+                                 final DialogInterface.OnClickListener positiveOnClickListener,
+                                 int itemIndexChecked) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        sItemIndexChecked = itemIndexChecked;
+        sOldItemIndexChecked = itemIndexChecked;
 
         builder.setTitle(R.string.dialog_movie_order_title)
-                .setSingleChoiceItems(R.array.dialog_movie_order_content, sItemIndexChecked, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(R.array.dialog_movie_order_content, sItemIndexChecked,
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sItemIndexChecked = which;
@@ -32,7 +37,9 @@ public class MovieOrderDialog extends DialogFragment{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(sItemIndexChecked != sOldItemIndexChecked) positiveOnClickListener.onClick(dialog, sItemIndexChecked);
+                        if(sItemIndexChecked != sOldItemIndexChecked) {
+                            positiveOnClickListener.onClick(dialog, sItemIndexChecked);
+                        }
                         sOldItemIndexChecked = sItemIndexChecked;
                     }
                 }

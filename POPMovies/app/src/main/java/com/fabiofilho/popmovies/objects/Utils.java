@@ -1,5 +1,8 @@
 package com.fabiofilho.popmovies.objects;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+
 /**
  * Created by dialam on 25/01/17.
  */
@@ -22,5 +25,19 @@ public class Utils {
         methodName = stackTraceElement.getClassName()+"."+ stackTraceElement.getMethodName()+"()";
 
         return methodName;
+    }
+
+
+    /**
+     *  Calculate the number of columns should be set on screen.
+     * @param context
+     * @return number of columns.
+     */
+    public static int calculateNumberOfColumns(Context context) {
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int defaultWidth = 180;
+        return (int) (dpWidth / defaultWidth);
     }
 }
